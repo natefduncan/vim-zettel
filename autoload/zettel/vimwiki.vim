@@ -692,7 +692,22 @@ function! zettel#vimwiki#prepare_template_variables(filename, title)
   " be useful in the child note, like citations,  etc. Footer is everything
   " below last horizontal rule (----)
   let variables.footer = s:read_footer(a:filename)
+  let variables.tags = s:read_tags(a:filename)
   return variables
+endfunction
+
+" find and return tags in file
+" tags are in the header after 'tags: '
+function! s:read_tags(filename)
+  let lines = readfile(a:filename)
+  let tags = ""
+  for line in lines
+      if match(line, "tags: ") == 0
+          let tags = substitute(line, 'tags: ', '', 'g')
+          break
+      endif
+  endfor
+  return tags
 endfunction
 
 " find and return footer in the file
